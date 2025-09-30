@@ -27,8 +27,13 @@ mod crud_todo {
         todos: Mapping<u32, Todo>,
         next_id: u32,
     }
-   
 
+    impl Default for TodoContract {
+            fn default() -> Self {
+            Self::new()
+            }
+    }
+    
     impl TodoContract {
         #[ink(constructor)]
         pub fn new() -> Self {
@@ -48,7 +53,7 @@ mod crud_todo {
             };
             
             self.todos.insert(id, &todo);
-            self.next_id += 1;
+            self.next_id = self.next_id.saturating_add(1);
             
             Ok(id)
         }
